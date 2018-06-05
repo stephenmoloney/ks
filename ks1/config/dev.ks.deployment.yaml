@@ -18,7 +18,7 @@ spec:
         run: ksweb
     spec:
       containers:
-      - image: smoloney/ks:v1
+      - image: registry.codinghere.com/smoloney/ks:v1
         name: ksweb
         imagePullPolicy: IfNotPresent
         ports:

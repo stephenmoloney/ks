@@ -18,10 +18,12 @@ spec:
         run: ksweb
     spec:
       containers:
-      - image: ks:v1
+      - image: smoloney/ks:v1
         name: ksweb
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
         resources: {}
+      imagePullSecrets:
+        - name: harbor-registry
 status: {}

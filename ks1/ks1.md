@@ -43,24 +43,6 @@ The objective here is to create a minimal react app and hook it up with kubernet
 
 ## Move app into kubernetes
 
-1. start minikube
-
-    ```bash
-    ➜ minikube start
-    ```
-
-1. switch to minikube context
-
-    ```bash
-    ➜ eval $(minikube docker-env)
-    ```
-
-    If you ever need to switch back to your machine's context do:
-
-    ```bash
-    ➜ eval $(docker-machine env -u)
-    ```
-
 1. create apps Dockerfile
 
     The docker image is based on the following docker file
@@ -136,55 +118,53 @@ The objective here is to create a minimal react app and hook it up with kubernet
     ks1     ks1.185.80.184.150.nip.io             80        10m
     ```
 
-1. check web logs
+    ```bash
+    kubectl get pod --selector app=ks1 -o wide
+ 
+    NAME                   READY     STATUS    RESTARTS   AGE       IP           NODE
+    ks1-78f6559cf6-b2t76   1/1       Running   0          2m        10.244.1.4   kubenow-cluster-node-001
+    ```
+
+8. check web logs
 
     ```bash
-    ➜ kubectl logs ks1-1832552125-6p0z3
-    yarn run v1.1.0
-    $ react-scripts start
+    ➜ kubectl logs ks1-78f6559cf6-b2t76
+ 
     Starting the development server...
-
+    
     Compiled successfully!
-
+    
     You can now view app in the browser.
-
-    Local:            http://localhost:3000/
-    On Your Network:  http://172.17.0.2:3000/
-
+    
+      Local:            http://localhost:3000/
+      On Your Network:  http://10.244.1.4:3000/
+    
     Note that the development build is not optimized.
     To create a production build, use yarn build.
     ```
+    
+    As `http://10.244.1.4:3000` is an internal network address for the kubernetes cluster,
+    this is effectively unreachable and redundant.
+    
+    The server serving on `http://localhost:3000/` will have it's requests proxied through
+    the ingress controller and will be served publically at the declared host address which 
+    was `ks1.185.80.184.150.nip.io` - where `185.80.184.150.nip.io` is the public domain and
+    `ks1` is a subdomain. 
 
-1. service app
 
-    Get URL and navigate to it.
-    ```bash
-    ➜ minikube service ks1 --url
-    ```
-
-1. delete app
+9. delete app
 
     To delete deployment and service:
 
     ```bash
-    ➜ kubectl delete -f ./config/dev.ks.deployment.yaml
-    ➜ kubectl delete -f ./config/dev.ks.service.yaml
+    kubectl delete -f ./config/deployment.yaml
+    kubectl delete -f ./config/service.yaml
+    kubectl delete -f ./config/ingress.yaml
     ```
 
-    To delete image
+    To delete image (locally)
 
     ```bash
-    ➜ docker rmi smoloney/ks:v1
+    docker rmi smoloney/ks:v1
     ```
-
-    To switch context
-
-    ```bash
-    ➜ eval $(docker-machine env -u)
-    ```
-
-    To stop minikube
-
-    ```bash
-    ➜ minikube stop
-    ```
+    

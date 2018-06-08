@@ -1,17 +1,15 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    run: ksweb
+    app: ksweb
   name: ksweb
 spec:
   ports:
-  - port: 80
-    protocol: TCP
+  - name: http
+    port: 80
     targetPort: 3000
   selector:
-    run: ksweb
-  type: LoadBalancer
-status:
-  loadBalancer: {}
+    app: ksweb

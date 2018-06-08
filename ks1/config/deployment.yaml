@@ -1,21 +1,22 @@
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    run: ksweb
+    app: ksweb
   name: ksweb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: ksweb
+      app: ksweb
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        run: ksweb
+        app: ksweb
     spec:
       containers:
       - image: registry.codinghere.com/smoloney/ks:v1

@@ -1,0 +1,16 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app: ksweb
+  name: ksweb
+spec:
+  rules:
+  - host: ks1.185.80.184.150.nip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ksweb
+          servicePort: http

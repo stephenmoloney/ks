@@ -68,112 +68,78 @@ The objective here is to create a minimal react app and hook it up with kubernet
 
     ```dockerfile
     FROM node:8.6.0
-
+    
     ADD ./app /app
-
+    
     WORKDIR /app
-
+    
     EXPOSE 3000
-
-    RUN yarn install
-    RUN yarn
+    
+    RUN \
+        if [ -d node_modules ]; then \
+          rm -R node_modules; \\
+        fi && \
+        yarn install && \
+        yarn
+    
     CMD ["yarn", "start"]
     ```
 
-1. create the docker image
+2. create the docker image and upload it to your private registry.
 
     ```bash
-    ➜ docker build -f ./web/Dockerfile -t kswebimage .
+    docker build -f ./web/Dockerfile -t <your-namespace>/ks:v1 . && \
+    docker login registry.<your_registry>.com && \
+    docker tag <your-namespace>/ks:v1 registry.<your_registry>.com/<your-namespace>/ks:v1 && \
+    docker push registry.<your_registry>.com/<your-namespace>/ks:v1
     ```
 
-1. create kubernetes deployment file
+3. create kubernetes deployment file, see `./ks1/config/deployment.yaml`
 
-    File: `./ks1/config/dev.ks.deployment.yaml`
+4. create kubernetes service file, see `./ks1/config/service.yaml`
 
-    ```yaml
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    metadata:
-    creationTimestamp: null
-    labels:
-        run: ksweb
-    name: ksweb
-    spec:
-    replicas: 1
-    selector:
-        matchLabels:
-        run: ksweb
-    strategy: {}
-    template:
-        metadata:
-        creationTimestamp: null
-        labels:
-            run: ksweb
-        spec:
-        containers:
-        - image: kswebimage:latest
-            name: ksweb
-            imagePullPolicy: IfNotPresent
-            ports:
-            - containerPort: 3000
-            resources: {}
-    status: {}
-    ```
+5. create kubernetes ingress file, see `./ks1/config/ingress.yaml`
 
-1. create kubernetes service file
-
-    File: `./ks1/config/dev.ks.service.yaml`
-
-    ```yaml
-    apiVersion: v1
-    kind: Service
-    metadata:
-    creationTimestamp: null
-    labels:
-        run: ksweb
-    name: ksweb
-    spec:
-    ports:
-    - port: 80
-        protocol: TCP
-        targetPort: 3000
-    selector:
-        run: ksweb
-    type: LoadBalancer
-    status:
-    loadBalancer: {}
-    ```
-1. create deployment and service
+6. use kubectl to launch/create the pods
 
     ```bash
-    ➜ kubectl create -f ./config/dev.ks.deployment.yaml
-    deployment "ksweb" created
+    ➜ kubectl create -f ./config/deployment.yaml
+    deployment "ks1" created
 
-    ➜ kubectl create -f ./config/dev.ks.service.yaml
-    service "ksweb" created
+    ➜ kubectl create -f ./config/service.yaml
+    service "ks1" created
+ 
+    ➜ kubectl create -f ./config/ingress.yaml
+    ingress "ks1" created
     ```
 
-1. check cluster status
+7. Check cluster status, example output:
 
     ```bash
-    ➜ kubectl get all
-    NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-    deploy/ksweb   1         1         1            1           2m
+    kubectl get deployment ks1 -o wide
+ 
+    NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE       CONTAINERS   IMAGES                                   SELECTOR
+    ks1     1         1         1            1           6m        ks1        registry.codinghere.com/smoloney/ks:v1   app=ks1
+    ```
 
-    NAME                  DESIRED   CURRENT   READY     AGE
-    rs/ksweb-1832552125   1         1         1         2m
+    ```bash
+    kubectl get service ks1 -o wide
+ 
+    NAME      TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE       SELECTOR
+    ks1     ClusterIP   10.105.17.56   <none>        80/TCP    9m        app=ks1
+    ```
 
-    NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-    deploy/ksweb   1         1         1            1           2m
-
-    NAME                        READY     STATUS    RESTARTS   AGE
-    po/ksweb-1832552125-6p0z3   1/1       Running   0          2m
+    ```bash
+    kubectl get ingress ks1 -o wide
+ 
+    NAME      HOSTS                       ADDRESS   PORTS     AGE
+    ks1     ks1.185.80.184.150.nip.io             80        10m
     ```
 
 1. check web logs
 
     ```bash
-    ➜ kubectl logs ksweb-1832552125-6p0z3
+    ➜ kubectl logs ks1-1832552125-6p0z3
     yarn run v1.1.0
     $ react-scripts start
     Starting the development server...
@@ -193,7 +159,7 @@ The objective here is to create a minimal react app and hook it up with kubernet
 
     Get URL and navigate to it.
     ```bash
-    ➜ minikube service ksweb --url
+    ➜ minikube service ks1 --url
     ```
 
 1. delete app
@@ -208,7 +174,7 @@ The objective here is to create a minimal react app and hook it up with kubernet
     To delete image
 
     ```bash
-    ➜ docker rmi kswebimage
+    ➜ docker rmi smoloney/ks:v1
     ```
 
     To switch context

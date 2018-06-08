@@ -4,23 +4,23 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: ksweb
-  name: ksweb
+    app: ks1
+  name: ks1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ksweb
+      app: ks1
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: ksweb
+        app: ks1
     spec:
       containers:
       - image: registry.codinghere.com/smoloney/ks:v1
-        name: ksweb
+        name: ks1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000

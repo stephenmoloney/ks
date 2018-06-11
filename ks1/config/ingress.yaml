@@ -7,7 +7,7 @@ metadata:
   name: ks1
 spec:
   rules:
-  - host: ks1.185.80.184.150.nip.io
+  - host: ks1.185.80.184.161.nip.io
     http:
       paths:
       - path: /

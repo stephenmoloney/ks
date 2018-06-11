@@ -115,7 +115,7 @@ The objective here is to create a minimal react app and run it in a kubernetes c
     kubectl get ingress ks1 -o wide
  
     NAME      HOSTS                       ADDRESS   PORTS     AGE
-    ks1     ks1.185.80.184.150.nip.io             80        10m
+    ks1     ks1.185.80.184.161.nip.io             80        10m
     ```
 
     ```bash
@@ -148,7 +148,7 @@ The objective here is to create a minimal react app and run it in a kubernetes c
     
     The server serving on `http://localhost:3000/` will have it's requests proxied through
     the ingress controller and will be served publically at the declared host address which 
-    was `ks1.185.80.184.150.nip.io` - where `185.80.184.150.nip.io` is the public domain and
+    was `ks1.185.80.184.161.nip.io` - where `185.80.184.161.nip.io` is the public domain and
     `ks1` is a subdomain. 
 
 

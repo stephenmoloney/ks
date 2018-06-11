@@ -4,113 +4,16 @@ The objective here is to incorporate a python flask server and let our frontend 
 
 1. navigate to ks3
 
-    ```bash
-    ➜ pwd
-        ~/dev/github/redgate/ks/ks3
-    ```
+```bash
+cd ~/dev/github/redgate/ks/ks3
+```
 
-1. start minikube
+2. build the web and server docker images
 
-    ```bash
-    ➜ minikube start
-    ```
-
-1. switch to minikube context
-
-    ```bash
-    ➜ eval $(minikube docker-env)
-    ```
-
-    If you ever need to switch back to your machine's context do:
-
-    ```bash
-    ➜ eval $(docker-machine env -u)
-    ```
-
-1. we create a Flask server
-
-    see `ks/ks3/server` for more details
-
-    `server.py`:
-
-    ```py
-    'ks3 web server'
-
-    from flask import Flask
-
-    import controllers.hello as controller_hello
-
-    app = Flask(__name__)
-
-    app.add_url_rule('/api/hello', view_func=controller_hello.hello, methods=['GET'])
-
-    if __name__ == '__main__':
-        app.logger.info('starting server in development mode')
-        app.logger.info('all ready, starting server')
-        app.run(host='0.0.0.0', port=5000)
-    ```
-
-    Hello controller `hello.py`:
-
-    ```py
-    'hello controller'
-
-    from flask import jsonify
-    from flask import current_app
-
-    def hello():
-        'GET hello'
-        current_app.logger.info('hello controller called')
-        return jsonify({
-            'message': 'world'
-        })
-    ```
-
-1. web server dockerfile
-
-    ```dockerfile
-    FROM python:3.5
-
-    WORKDIR .
-
-    ADD ./server ./server
-
-    WORKDIR /server
-
-    RUN pip install -r requirements.txt
-
-    ENV FLASK_APP=/server/server.py
-
-    EXPOSE 5000
-
-    ENTRYPOINT ["python"]
-    CMD ["server.py"]
-    ```
-
-1. build web docker image
-
-    ```bash
-    ➜ docker build -f ./web/Dockerfile -t ks3webimage .
-    ```
-
-1. build web server docker image
-
-    ```bash
-    ➜ docker build -f ./server/Dockerfile -t ks3webserverimage .
-    ```
-
-1. we need to update the `dev.ks.deployment.yaml` file with the webserver image `ks3webserverimage`
-
-    ```yaml
-    - image: ks3webserverimage:latest
-    name: ks3webserver
-    imagePullPolicy: IfNotPresent
-    command: ["python"]
-    args: ["-m", "flask", "run"]
-    ports:
-    - containerPort: 5000
-    resources: {}
-    ```
+```shell
+docker build --file ./web/Dockerfile --tag <your_namespace>/ks-frontend:v3 . && \
+docker build -f ./server/Dockerfile -t <your_namespace>/ks-backend:v3 .
+```
 
 1. mount frontend source code
 

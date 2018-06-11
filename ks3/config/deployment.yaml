@@ -1,42 +1,40 @@
-apiVersion: extensions/v1beta1
+---
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
-    run: ks3web
-  name: ks3web
+    app: ks3
+  name: ks3
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: ks3web
+      app: ks3
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        run: ks3web
+        app: ks3
     spec:
       containers:
-      - image: ks3webimage:latest
-        name: ks3web
+      - image: registry.codinghere.com/smoloney/ks-frontend:v3
+        name: ks3-frontend
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
-        resources: {}
         volumeMounts:
           - mountPath: /app/src
             name: frontend
-      - image: ks3webserverimage:latest
-        name: ks3webserver
+
+      - image: registry.codinghere.com/smoloney/ks-backend:v3
+        name: ks3-backend
         imagePullPolicy: IfNotPresent
         command: ["python"]
         args: ["-m", "flask", "run"]
         ports:
         - containerPort: 5000
-        resources: {}
+
       volumes:
       - name: frontend
         hostPath:
           path: /mounted-ks3-app-src/app/src
-status: {}

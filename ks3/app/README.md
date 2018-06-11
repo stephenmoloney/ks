@@ -894,7 +894,7 @@ set REACT_APP_SECRET_CODE=abcdef&&npm start
 
 #### Linux, macOS (Bash)
 
-```bash
+```shell
 REACT_APP_SECRET_CODE=abcdef npm start
 ```
 
@@ -1132,7 +1132,7 @@ set HTTPS=true&&npm start
 
 #### Linux, macOS (Bash)
 
-```bash
+```shell
 HTTPS=true npm start
 ```
 
@@ -1420,11 +1420,11 @@ set CI=true&&npm run build
 
 ##### Linux, macOS (Bash)
 
-```bash
+```shell
 CI=true npm test
 ```
 
-```bash
+```shell
 CI=true npm run build
 ```
 

@@ -16,7 +16,6 @@ spec:
         app: ks3
     spec:
       containers:
-
       - image: registry.codinghere.com/smoloney/ks-frontend:v3
         name: ks3-frontend
         imagePullPolicy: IfNotPresent
@@ -25,7 +24,6 @@ spec:
         volumeMounts:
           - mountPath: /app/src
             name: frontend
-
       - image: registry.codinghere.com/smoloney/ks-backend:v3
         name: ks3-backend
         imagePullPolicy: IfNotPresent
@@ -33,10 +31,8 @@ spec:
         args: ["-m", "flask", "run"]
         ports:
         - containerPort: 5000
-
       imagePullSecrets:
         - name: harbor-registry
-
       volumes:
       - name: frontend
         hostPath:

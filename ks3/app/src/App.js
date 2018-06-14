@@ -11,12 +11,7 @@ const fetchMessage =
     }).then(response => {
       return response.json()
     }).then(json => {
-      if (json.message === '' || json.message === 'undefined') {
-       return { message: json.message }
-      }
-      else {
-       return { message: 'moon' }
-      }
+      return { message: json.message[0] || 'there' }
     })
   }
 
@@ -24,19 +19,21 @@ class App extends Component {
 
   constructor(props){
     super(props)
-    this.state = { message: 'moon' }
+    this.state = { message: 'there' };
+
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.updateState(), 1000);
+    this.interval = setInterval(() =>
+      fetchMessage()
+      .then(newState => {
+        this.setState(newState)
+      })
+    , 1000);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
-  }
-
-  updateState() {
-    this.setState(fetchMessage());
   }
 
   render() {

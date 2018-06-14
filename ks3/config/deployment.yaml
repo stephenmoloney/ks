@@ -38,7 +38,7 @@ spec:
             value: "true"
       - image: registry.codinghere.com/smoloney/ks-backend:v3
         name: ks3-backend
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         command: ["python"]
         args: ["-m", "flask", "run"]
         ports:

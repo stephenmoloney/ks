@@ -1,5 +1,5 @@
 ---
-apiVersion: apps/v1beta1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -15,6 +15,14 @@ spec:
       labels:
         app: ks3
     spec:
+      initContainers:
+      - image: alpine/git
+        imagePullPolicy: IfNotPresent
+        name: ks3-init-repo
+        command:  ['sh', '-c', 'git clone --branch=dev https://github.com/stephenmoloney/ks.git /tmp/ks && cp -r /tmp/ks/ks3/app/src/ /ks3/']
+        volumeMounts:
+        - name: frontend
+          mountPath: /ks3/src
       containers:
       - image: registry.codinghere.com/smoloney/ks-frontend:v3
         name: ks3-frontend
@@ -22,8 +30,12 @@ spec:
         ports:
         - containerPort: 3000
         volumeMounts:
-          - mountPath: /app/src
-            name: frontend
+          - name: frontend
+            mountPath: /app/src
+            readOnly: true
+        env:
+          - name: DANGEROUSLY_DISABLE_HOST_CHECK
+            value: "true"
       - image: registry.codinghere.com/smoloney/ks-backend:v3
         name: ks3-backend
         imagePullPolicy: IfNotPresent
@@ -35,5 +47,4 @@ spec:
         - name: harbor-registry
       volumes:
       - name: frontend
-        hostPath:
-          path: /mounted-ks3-app-src/app/src
+        emptyDir: {}

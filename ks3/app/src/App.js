@@ -2,24 +2,42 @@ import React, { Component } from 'react'
 import './App.css'
 import 'whatwg-fetch'
 
+const fetchMessage =
+  function(){
+    fetch('/api/hello', {
+     headers: {
+       "Content-Type": "application/json"
+     }
+    }).then(response => {
+      console.log(response.json);
+      return response.json()
+    }).then(json => {
+      if (json.message == '') {
+        return { message: json.message }
+      }
+      else {
+        return { message: 'moon' }
+      }
+    })
+  }
+
 class App extends Component {
 
   constructor(props){
     super(props)
-    this.state= { message: 'moon'}
-    this.fetchMessage()
+    this.state = { message: 'moon' }
   }
 
-  fetchMessage(){
-    fetch('/api/hello', {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(response => {
-      return response.json()
-    }).then(json => {
-      this.setState({message: json.message})
-    })
+  componentDidMount() {
+    this.interval = setInterval(() => this.updateState(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  updateState() {
+    this.setState(fetchMessage());
   }
 
   render() {

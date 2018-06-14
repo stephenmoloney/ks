@@ -2,6 +2,9 @@
 
 The objective here is to incorporate a python flask server and let our frontend make API calls to it.
 
+Also, another objective is to clone the repository from git and use a mounted volume as the src for
+the frontend code.
+
 1. navigate to ks3
 
 ```shell
@@ -29,37 +32,22 @@ kubectl create -f ./config/service.yaml
 kubectl create -f ./config/ingress.yaml
 ```
 
-4. get web server logs
-
-```shell
-kubectl logs ks3web-1748674206-g14vb ks3webserver
-
-* Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-* Restarting with stat
-/usr/local/lib/python3.5/runpy.py:125: RuntimeWarning: 'flask.cli' found in sys.modules after import of package 'flask', but prior to execution of 'flask.cli'; this may result in unpredictable behaviour
-warn(RuntimeWarning(msg))
-* Debugger is active!
-* Debugger PIN: 207-014-748
-```
-
-
-5. Call the web server from our frontend code
-
-```shell
-* navigate to `./app`
-* we add a proxy to the `./app/package.json` file to `http://localhost:5000`
-    `"proxy": "http://localhost:5000"`
-* add fetch api to frontend
-    `yarn add whatwg-fetch`
-```
-
-6. check app runs as expected
+4. check app runs as expected
 
 ```shell
 kubectl get pods
 ```
 
-7. service app with minikube
+5. get all the logs for the containers
+
+```shell
+export POD=<pod-id>
+kubectl logs -f ${POD} --container=ks3-init-repo
+kubectl logs -f ${POD} --container=ks3-frontend
+kubectl logs -f ${POD} --container=ks3-backend
+```
+
+6. service app with minikube
 
 ```shell
 minikube service ks3web --url

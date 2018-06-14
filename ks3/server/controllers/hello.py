@@ -1,5 +1,7 @@
 'hello controller'
 
+import random
+
 from flask import jsonify
 from flask import current_app
 

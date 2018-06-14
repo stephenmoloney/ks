@@ -14,3 +14,7 @@ spec:
         backend:
           serviceName: ks3
           servicePort: http
+      - path: /api/hello
+        backend:
+          serviceName: ks3
+          servicePort: api

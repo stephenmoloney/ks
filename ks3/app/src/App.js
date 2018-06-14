@@ -9,14 +9,13 @@ const fetchMessage =
        "Content-Type": "application/json"
      }
     }).then(response => {
-      console.log(response.json);
       return response.json()
     }).then(json => {
-      if (json.message == '') {
-        return { message: json.message }
+      if (json.message === '' || json.message === 'undefined') {
+       return { message: json.message }
       }
       else {
-        return { message: 'moon' }
+       return { message: 'moon' }
       }
     })
   }

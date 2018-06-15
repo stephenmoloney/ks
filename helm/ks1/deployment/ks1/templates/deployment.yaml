@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ks1.fullname" . }}
+  labels:
+    app: {{ template "ks1.name" . }}
+    chart: {{ template "ks1.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ks1.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ks1.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        imagePullSecrets:
+          - name: {{ .Values.image.pullSecrets }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.portName }}
+            initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.portName }}

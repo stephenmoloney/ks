@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  repository: registry.codinghere.com/smoloney/ks
+  tag: v1
+  pullPolicy: IfNotPresent
+  pullSecrets: harbor-registry
+
+service:
+  type: ClusterIP
+  portName: http
+  externalPort: 80
+  internalPort: 3000
+  livenessProbeDelay: 20
+
+ingress:
+  enabled: true
+  path: /
+  host: ks1.185.80.184.161.nip.io
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -275,7 +275,7 @@ helm lint deployment/ks1
 - to delete a broken release
 
 ```shell
-helm delete ks1
+helm delete --purge ks1
 ```
 
 - Upon fixing the error in the yaml, file, the release was successfully deployed 

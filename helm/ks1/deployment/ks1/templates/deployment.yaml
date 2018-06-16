@@ -20,8 +20,6 @@ spec:
         app: {{ template "ks1.name" . }}
         release: {{ .Release.Name }}
     spec:
-      imagePullSecrets:
-        - name: {{ .Values.image.pullSecrets }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -37,3 +35,5 @@ spec:
           httpGet:
             path: /
             port: {{ .Values.service.portName }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecrets }}

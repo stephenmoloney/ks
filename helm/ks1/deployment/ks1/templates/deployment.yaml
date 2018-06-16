@@ -28,12 +28,19 @@ spec:
         - containerPort: {{ .Values.service.internalPort }}
         livenessProbe:
           httpGet:
-            path: /
+            host: {{ .Values.ingress.host }}
+            path: {{ .Values.ingress.path }}
             port: {{ .Values.service.portName }}
-            initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
+            scheme: {{ .Values.service.livenessProbeHTTPScheme }}
+          initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
+          periodSeconds: {{ .Values.service.livenessProbePeriod }}
+          timeoutSeconds: {{ .Values.service.livenessProbeTimeout }}
+          successThreshold: {{ .Values.service.livenessProbeSuccessThreshold }}
+          failureThreshold: {{ .Values.service.livenessProbeFailureThreshold }}
         readinessProbe:
           httpGet:
-            path: /
+            host: {{ .Values.ingress.host }}
+            path: {{ .Values.ingress.path }}
             port: {{ .Values.service.portName }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecrets }}

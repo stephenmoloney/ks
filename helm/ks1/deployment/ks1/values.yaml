@@ -11,7 +11,12 @@ service:
   portName: http
   externalPort: 80
   internalPort: 3000
-  livenessProbeDelay: 30
+  livenessProbeHTTPScheme: HTTP
+  livenessProbeDelay: 20
+  livenessProbePeriod: 5
+  livenessProbeTimeout: 1
+  livenessProbeSuccessThreshold: 1
+  livenessProbeFailureThreshold: 3
 
 ingress:
   enabled: true

@@ -303,6 +303,12 @@ NAME  HOSTS                      ADDRESS  PORTS  AGE
 ks1   ks1.185.80.184.161.nip.io  80       0s
 ```
 
+- To do a dry run of a helm installation/upgrade
+
+```shell
+helm upgrade ks1 ./deployment/ks1 --dry-run --debug --install
+```
+
 
 
 

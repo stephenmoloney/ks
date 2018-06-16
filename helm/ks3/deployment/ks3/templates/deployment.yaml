@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ks3.fullname" . }}
+  labels:
+    app: {{ template "ks3.name" . }}
+    chart: {{ template "ks3.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ks3.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ks3.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+      - name: "{{ .Chart.Name }}-{{ .Values.init.name }}"
+        image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
+        imagePullPolicy: {{ .Values.init.image.pullPolicy }}
+        command:  ['sh', '-c', 'git clone --branch=dev https://github.com/stephenmoloney/ks.git /tmp/ks && cp -r /tmp/ks/ks3/app/src/ /ks3/']
+        volumeMounts:
+        - name: {{ .Values.init.volume }}
+          mountPath: {{ .Values.init.mounthPath }}
+
+      containers:
+      - name: "{{ .Chart.Name }}-{{ .Values.frontend.name }}"
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.frontend.ingress.path }}
+            port: {{ .Values.frontend.service.internalPort }}
+            scheme: {{ .Values.common.service.probesScheme }}
+          {{ include "ks3.livenessProbeSettings" . | indent 4 }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.frontend.ingress.path }}
+            port: {{ .Values.frontend.service.internalPort }}
+            scheme: {{ .Values.common.service.probesScheme }}
+        {{ include "ks3.readinessProbeSettings" . | indent 4 }}
+        volumeMounts:
+          - name: {{ .Values.frontend.volume }}
+            mountPath: {{ .Values.frontend.mountPath }}
+            readOnly: true
+        env:
+          - name: DANGEROUSLY_DISABLE_HOST_CHECK
+            value: "true"
+
+      - name: "{{ .Chart.Name }}-{{ .Values.backend.name }}"
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        command: ["python"]
+        args: ["-m", "flask", "run"]
+        ports:
+        - containerPort: {{ .Values.backend.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.backend.ingress.path }}
+            port: {{ .Values.backend.service.internalPort }}
+            scheme: {{ .Values.common.service.probesScheme }}
+          {{ include "ks3.livenessProbeSettings" . | indent 4 }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.backend.ingress.path }}
+            port: {{ .Values.backend.service.internalPort }}
+            scheme: {{ .Values.common.service.probesScheme }}
+        {{ include "ks3.readinessProbeSettings" . | indent 4 }}
+
+      imagePullSecrets:
+        - name: {{ .Values.common.pullSecrets }}
+
+      volumes:
+      - name: {{ .Values.frontend.volume }}
+        emptyDir: {}

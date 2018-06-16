@@ -15,6 +15,8 @@ docker tag smoloney/ks:v1 ${REGISTRY_DOMAIN}/smoloney/ks:v1 && \
 docker push ${REGISTRY_DOMAIN}/smoloney/ks:v1
 ```
 
+- Ensure the docker registry secret has been setup.
+
 ## Create the charts folder
 
 1. Navigate to `helm/ks1`

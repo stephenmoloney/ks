@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ks3.fullname" . }}
+  labels:
+    app: {{ template "ks3.name" . }}
+    chart: {{ template "ks3.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.common.service.type }}
+  selector:
+    app: {{ template "ks3.name" . }}
+    release: {{ .Release.Name }}
+  ports:
+  - name: {{ .Values.frontend.service.portName }}
+    port: {{ .Values.frontend.service.externalPort }}
+    targetPort: {{ .Values.frontend.service.internalPort }}
+  - name: {{ .Values.backend.service.portName }}
+    port: {{ .Values.backend.service.externalPort }}
+    targetPort: {{ .Values.backend.service.internalPort }}
+
+

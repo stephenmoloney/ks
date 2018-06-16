@@ -1,0 +1,36 @@
+{{- if .Values.common.ingress.enabled -}}
+{{- $fullName := include "ks3.fullname" . -}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ template "ks3.name" . }}
+    chart: {{ template "ks3.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+{{- if .Values.common.ingress.tls }}
+  tls:
+  {{- range .Values.common.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  - host: {{ .Values.common.ingress.host }}
+    http:
+      paths:
+        - path: {{ .Values.frontend.ingress.path }}
+          frontend:
+            serviceName: {{ template "ks3.name" . }}
+            servicePort: {{ .Values.frontend.service.portName }}
+        - path: {{ .Values.backend.ingress.path }}
+          backend:
+            serviceName: {{ template "ks3.name" . }}
+            servicePort: {{ .Values.backend.service.portName }}
+{{- end }}

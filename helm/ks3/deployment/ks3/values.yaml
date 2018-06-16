@@ -1,0 +1,73 @@
+replicaCount: 1
+
+init:
+  name: init-repo
+  image:
+    repository: alpine/git
+    tag: latest
+    pullPolicy: IfNotPresent
+  volume: frontend
+  mountPath: /ks3/src
+  ingress:
+    path: /
+    servicePort: http
+
+frontend:
+  name: frontend
+  image:
+    repository: registry.codinghere.com/smoloney/ks
+    tag: v3
+    pullPolicy: IfNotPresent
+  volume: frontend
+  mountPath: /app/src
+  service:
+    portName: http
+    externalPort: 80
+    internalPort: 3000
+  ingress:
+    path: /api/hello
+    servicePort: api
+
+backend:
+  name: backend
+  image:
+    repository: registry.codinghere.com/smoloney/ks
+    tag: v3
+    pullPolicy: IfNotPresent
+  service:
+    portName: api
+    externalPort: 8080
+    internalPort: 5000
+  ingress:
+    path: /api/hello
+    servicePort: api
+
+common:
+  image:
+    pullSecrets: harbor-registry
+  service:
+    type: ClusterIP
+    probesScheme: HTTP
+  ingress:
+    enabled: true
+    host: ks3.185.80.184.161.nip.io
+    tls: []
+  probes:
+    livenessProbeDelay: 15
+    livenessProbePeriod: 5
+    livenessProbeTimeout: 1
+    livenessProbeSuccessThreshold: 1
+    livenessProbeFailureThreshold: 6
+    readinessProbeDelay: 5
+    readinessProbePeriod: 3
+    readinessProbeTimeout: 1
+    readinessProbeSuccessThreshold: 1
+    readinessProbeFailureThreshold: 20
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

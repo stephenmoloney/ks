@@ -26,21 +26,25 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.internalPort }}
-#        livenessProbe:
-#          httpGet:
-#            host: {{ .Values.ingress.host }}
-#            path: {{ .Values.ingress.path }}
-#            port: {{ .Values.service.portName }}
-#            scheme: {{ .Values.service.livenessProbeHTTPScheme }}
-#          initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
-#          periodSeconds: {{ .Values.service.livenessProbePeriod }}
-#          timeoutSeconds: {{ .Values.service.livenessProbeTimeout }}
-#          successThreshold: {{ .Values.service.livenessProbeSuccessThreshold }}
-#          failureThreshold: {{ .Values.service.livenessProbeFailureThreshold }}
-#        readinessProbe:
-#          httpGet:
-#            host: {{ .Values.ingress.host }}
-#            path: {{ .Values.ingress.path }}
-#            port: {{ .Values.service.portName }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.ingress.path }}
+            port: {{ .Values.service.internalPort }}
+            scheme: {{ .Values.service.probesScheme }}
+          initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
+          periodSeconds: {{ .Values.service.livenessProbePeriod }}
+          timeoutSeconds: {{ .Values.service.livenessProbeTimeout }}
+          successThreshold: {{ .Values.service.livenessProbeSuccessThreshold }}
+          failureThreshold: {{ .Values.service.livenessProbeFailureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.ingress.path }}
+            port: {{ .Values.service.internalPort }}
+            scheme: {{ .Values.service.probesScheme }}
+          initialDelaySeconds: {{ .Values.service.readinessProbeDelay }}
+          periodSeconds: {{ .Values.service.readinessProbePeriod }}
+          timeoutSeconds: {{ .Values.service.readinessProbeTimeout }}
+          successThreshold: {{ .Values.service.readinessProbeSuccessThreshold }}
+          failureThreshold: {{ .Values.service.readinessProbeFailureThreshold }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecrets }}

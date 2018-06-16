@@ -20,14 +20,14 @@ spec:
         app: {{ template "ks1.name" . }}
         release: {{ .Release.Name }}
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecrets }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.internalPort }}
-        imagePullSecrets:
-          - name: {{ .Values.image.pullSecrets }}
         livenessProbe:
           httpGet:
             path: /

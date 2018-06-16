@@ -30,6 +30,6 @@ spec:
         - path: {{ .Values.ingress.path }}
           backend:
             serviceName: {{ template "ks1.name" . }}
-            servicePort: {{ .Values.service.externalPort }}
+            servicePort: {{ .Values.service.portName }}
 {{- end }}
 

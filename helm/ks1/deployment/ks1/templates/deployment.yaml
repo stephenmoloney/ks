@@ -26,21 +26,21 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.internalPort }}
-        livenessProbe:
-          httpGet:
-            host: {{ .Values.ingress.host }}
-            path: {{ .Values.ingress.path }}
-            port: {{ .Values.service.portName }}
-            scheme: {{ .Values.service.livenessProbeHTTPScheme }}
-          initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
-          periodSeconds: {{ .Values.service.livenessProbePeriod }}
-          timeoutSeconds: {{ .Values.service.livenessProbeTimeout }}
-          successThreshold: {{ .Values.service.livenessProbeSuccessThreshold }}
-          failureThreshold: {{ .Values.service.livenessProbeFailureThreshold }}
-        readinessProbe:
-          httpGet:
-            host: {{ .Values.ingress.host }}
-            path: {{ .Values.ingress.path }}
-            port: {{ .Values.service.portName }}
+#        livenessProbe:
+#          httpGet:
+#            host: {{ .Values.ingress.host }}
+#            path: {{ .Values.ingress.path }}
+#            port: {{ .Values.service.portName }}
+#            scheme: {{ .Values.service.livenessProbeHTTPScheme }}
+#          initialDelaySeconds: {{ .Values.service.livenessProbeDelay }}
+#          periodSeconds: {{ .Values.service.livenessProbePeriod }}
+#          timeoutSeconds: {{ .Values.service.livenessProbeTimeout }}
+#          successThreshold: {{ .Values.service.livenessProbeSuccessThreshold }}
+#          failureThreshold: {{ .Values.service.livenessProbeFailureThreshold }}
+#        readinessProbe:
+#          httpGet:
+#            host: {{ .Values.ingress.host }}
+#            path: {{ .Values.ingress.path }}
+#            port: {{ .Values.service.portName }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecrets }}

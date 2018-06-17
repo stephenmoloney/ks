@@ -36,21 +36,21 @@ Create chart name and version as used by the chart label.
 Create liveness probe settings
 */}}
 {{- define "ks3.livenessProbeSettings" -}}
-initialDelaySeconds: {{ .Values.common.livenessProbeDelay }}
-periodSeconds: {{ .Values.common.livenessProbePeriod }}
-timeoutSeconds: {{ .Values.common.livenessProbeTimeout }}
-successThreshold: {{ .Values.common.livenessProbeSuccessThreshold }}
-failureThreshold: {{ .Values.common.livenessProbeFailureThreshold }}
+initialDelaySeconds: {{ .Values.common.probes.livenessProbeDelay }}
+periodSeconds: {{ .Values.common.probes.livenessProbePeriod }}
+timeoutSeconds: {{ .Values.common.probes.livenessProbeTimeout }}
+successThreshold: {{ .Values.common.probes.livenessProbeSuccessThreshold }}
+failureThreshold: {{ .Values.common.probes.livenessProbeFailureThreshold }}
 {{- end -}}
 
 {{/*
 Create readiness probe settings
 */}}
 {{- define "ks3.readinessProbeSettings" -}}
-initialDelaySeconds: {{ .Values.common.readinessProbeDelay }}
-periodSeconds: {{ .Values.common.readinessProbePeriod }}
-timeoutSeconds: {{ .Values.common.readinessProbeTimeout }}
-successThreshold: {{ .Values.common.readinessProbeSuccessThreshold }}
-failureThreshold: {{ .Values.common.readinessProbeFailureThreshold }}
+initialDelaySeconds: {{ .Values.common.probes.readinessProbeDelay }}
+periodSeconds: {{ .Values.common.probes.readinessProbePeriod }}
+timeoutSeconds: {{ .Values.common.probes.readinessProbeTimeout }}
+successThreshold: {{ .Values.common.probes.readinessProbeSuccessThreshold }}
+failureThreshold: {{ .Values.common.probes.readinessProbeFailureThreshold }}
 {{- end -}}
 

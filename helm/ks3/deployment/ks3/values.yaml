@@ -50,13 +50,13 @@ common:
     host: ks3.185.80.184.161.nip.io
     tls: []
   probes:
-    livenessProbeDelay: 15
-    livenessProbePeriod: 5
+    livenessProbeDelay: 20
+    livenessProbePeriod: 10
     livenessProbeTimeout: 1
     livenessProbeSuccessThreshold: 1
-    livenessProbeFailureThreshold: 6
-    readinessProbeDelay: 5
-    readinessProbePeriod: 3
+    livenessProbeFailureThreshold: 10
+    readinessProbeDelay: 15
+    readinessProbePeriod: 5
     readinessProbeTimeout: 1
     readinessProbeSuccessThreshold: 1
     readinessProbeFailureThreshold: 20

@@ -56,7 +56,7 @@ spec:
             value: "true"
 
       - name: "{{ .Chart.Name }}-{{ .Values.backend.name }}"
-        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         command: ["python"]
         args: ["-m", "flask", "run"]

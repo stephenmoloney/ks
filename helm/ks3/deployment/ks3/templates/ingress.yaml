@@ -26,7 +26,7 @@ spec:
     http:
       paths:
         - path: {{ .Values.frontend.ingress.path }}
-          frontend:
+          backend:
             serviceName: {{ template "ks3.name" . }}
             servicePort: {{ .Values.frontend.service.portName }}
         - path: {{ .Values.backend.ingress.path }}

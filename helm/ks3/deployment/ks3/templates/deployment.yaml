@@ -24,17 +24,17 @@ spec:
       - name: "{{ .Chart.Name }}-{{ .Values.init.name }}"
         image: "{{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}"
         imagePullPolicy: {{ .Values.init.image.pullPolicy }}
-        command:  ['sh', '-c', 'git clone --branch=dev https://github.com/stephenmoloney/ks.git /tmp/ks && cp -r /tmp/ks/ks3/app/src/ /ks3/']
+        command:  ['sh', '-c', 'git clone --branch=dev https://github.com/stephenmoloney/ks.git /tmp/ks && cp -r /tmp/ks/kubernetes/ks3/app/src/ /ks3/']
         volumeMounts:
         - name: {{ .Values.init.volume }}
-          mountPath: {{ .Values.init.mounthPath }}
+          mountPath: {{ .Values.init.mountPath }}
 
       containers:
       - name: "{{ .Chart.Name }}-{{ .Values.frontend.name }}"
         image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.frontend.port }}
+        - containerPort: {{ .Values.frontend.service.internalPort }}
         livenessProbe:
           httpGet:
             path: {{ .Values.frontend.ingress.path }}

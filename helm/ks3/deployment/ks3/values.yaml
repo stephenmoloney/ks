@@ -8,14 +8,11 @@ init:
     pullPolicy: IfNotPresent
   volume: frontend
   mountPath: /ks3/src
-  ingress:
-    path: /
-    servicePort: http
 
 frontend:
   name: frontend
   image:
-    repository: registry.codinghere.com/smoloney/ks
+    repository: registry.codinghere.com/smoloney/ks-frontend
     tag: v3
     pullPolicy: IfNotPresent
   volume: frontend
@@ -25,13 +22,13 @@ frontend:
     externalPort: 80
     internalPort: 3000
   ingress:
-    path: /api/hello
+    path: /
     servicePort: api
 
 backend:
   name: backend
   image:
-    repository: registry.codinghere.com/smoloney/ks
+    repository: registry.codinghere.com/smoloney/ks-backend
     tag: v3
     pullPolicy: IfNotPresent
   service:

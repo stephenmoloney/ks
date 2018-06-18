@@ -19,7 +19,7 @@ spec:
       - image: alpine/git
         imagePullPolicy: IfNotPresent
         name: ks3-init-repo
-        command:  ['sh', '-c', 'git clone --branch=dev https://github.com/stephenmoloney/ks.git /tmp/ks && cp -r /tmp/ks/ks3/app/src/ /ks3/']
+        command:  ['sh', '-c', 'git clone --branch=dev https://github.com/stephenmoloney/ks.git /tmp/ks && cp -r /tmp/ks/kubernetes/ks3/app/src/ /ks3/']
         volumeMounts:
         - name: frontend
           mountPath: /ks3/src

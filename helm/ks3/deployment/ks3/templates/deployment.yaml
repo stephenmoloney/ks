@@ -76,7 +76,7 @@ spec:
 {{ include "ks3.readinessProbeSettings" . | indent 10 }}
 
       imagePullSecrets:
-        - name: {{ .Values.common.pullSecrets }}
+        - name: {{ .Values.common.image.pullSecrets }}
 
       volumes:
       - name: {{ .Values.frontend.volume }}
